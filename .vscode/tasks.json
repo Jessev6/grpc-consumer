@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate go protos",
+      "type": "shell",
+      "command": "mkdir -p gen && cd protobuf && protoc --go_out=plugins=grpc:${workspaceFolder}/gen *.proto"
+    },
+    {
+      "label": "Docker build",
+      "type": "shell",
+      "command": "docker build -t grpc-consumer -f build/docker/Dockerfile .",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

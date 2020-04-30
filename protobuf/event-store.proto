@@ -1,0 +1,30 @@
+syntax = "proto3"; 
+package eventstore;
+
+message Event { 
+    string key = 1; 
+    string id = 2;
+    bytes payload = 3;
+    bytes metadata = 4; 
+}
+
+message DeliveryStatus { 
+    bool success = 1;
+    string id = 2;
+} 
+
+message EventRange {
+    string key = 1;
+    string from = 2;
+    string to = 3;
+    int32 count = 4;
+    bool includeMetadata = 5;
+}
+
+service Producer { 
+    rpc Write(Event) returns (DeliveryStatus);
+}
+
+service Consumer {
+    rpc Read(stream EventRange) returns (stream Event);
+}

@@ -1,0 +1,62 @@
+# Project: grpc-consumer
+
+> This project is a part of the event-store project which can be found at [TODO: configure repo with submodules]()
+
+## Development
+> This project was fully setup for development in Visual Studio Code. Building and debugging is supported using the VSCode IDE.
+
+#### Requirements
+
+##### Install go
+[Official go docs](https://golang.org/doc/install#install)
+
+##### Get the protobuf tools for go
+Run following command to get the tools
+```
+go get -u github.com/golang/protobuf/protoc-gen-go
+```
+
+#### Generate the protobuf files
+
+##### VSCode
+
+Run task: "Generate go protos"
+
+##### CLI
+
+Run commands from project root:
+```
+mkdir -p gen 
+cd protobuf
+protoc --go_out=plugins=grpc:../gen *.proto
+cd ..
+```
+
+#### Debugging
+
+##### VSCode
+
+Launch debug configuration (F5)
+
+
+#### Build docker image
+##### VSCode
+
+Run build task
+
+##### CLI
+Run `docker build -t grpc-consumer -f build/docker/Dockerfile .`
+
+#### Testing
+> grpc-ui does not support bi-directional streaming so it cannot be used to test this application.
+
+For testing a small example client was put in place and can be found at: [TODO: link to example client repo]()
+
+## Configuration
+
+| Key  | Setting  | Default |
+|---|---| ---|
+| LOG_LEVEL  | Sets the global logging level for the application, defaults to 3 [INFO]  | 3 |
+| PORT | The port to expose the application on | 3000 |
+| REDIS_ADDR | The address of the redis server to connect to | localhost:6379 |
+| REDIS_PASSWORD | The password to use to connect to redis |  |
