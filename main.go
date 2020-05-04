@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net"
-	"os"
 	"strconv"
 	"time"
 
@@ -32,11 +31,6 @@ func main() {
 	}
 
 	var subscriber *infrastructure.RedisSubscriber
-	var port string
-
-	if port = os.Getenv("PORT"); port == "" {
-		port = "3000"
-	}
 
 	redisOptions := &redis.Options{
 		Addr:     config["REDIS_ADDR"],
@@ -52,7 +46,7 @@ func main() {
 		logger.Fatal(fmt.Sprintf("could not initialize publisher: %s", err.Error()), 1)
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", port))
+	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", config["PORT"]))
 
 	if err != nil {
 		logger.Fatal(err.Error(), 1)
