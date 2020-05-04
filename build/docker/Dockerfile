@@ -1,3 +1,7 @@
+# 0. Fetch ca-certificates
+FROM alpine:latest as certs
+RUN apk --update add ca-certificates
+
 # 1. build executable
 FROM golang:1.13-alpine as builder
 
@@ -28,6 +32,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-s -w" -o 
 
 # 5. Start process from scratch as appuser
 FROM scratch
+COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /tmp/main /bin/main
 USER appuser
