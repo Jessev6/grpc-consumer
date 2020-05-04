@@ -49,7 +49,7 @@ func (e *EventConsumerServer) Read(stream pb.Consumer_ReadServer) error {
 			client.Subscribe(subscription)
 			break
 		case event := <-*client.EventChan():
-			e.logger.Error(fmt.Sprintf("sending event: %v", event))
+			e.logger.Info(fmt.Sprintf("sending event: %v", event))
 			stream.Send(event)
 			break
 		case err := <-*client.ErrorChan():
