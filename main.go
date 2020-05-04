@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net"
 	"os"
@@ -31,27 +32,23 @@ func main() {
 	}
 
 	var subscriber *infrastructure.RedisSubscriber
-	var redisAddr string
-	var redisPassword string
 	var port string
-
-	if redisAddr = os.Getenv("REDIS_ADDR"); redisAddr == "" {
-		redisAddr = "localhost:6379"
-	}
-
-	if redisPassword = os.Getenv("REDIS_PASSWORD"); redisPassword == "" {
-		redisPassword = ""
-	}
 
 	if port = os.Getenv("PORT"); port == "" {
 		port = "3000"
 	}
 
-	if subscriber, err = infrastructure.NewRedisSubscriber(&redis.Options{
-		Addr:     redisAddr,
-		Password: redisPassword,
+	redisOptions := &redis.Options{
+		Addr:     config["REDIS_ADDR"],
+		Password: config["REDIS_PASSWORD"],
 		DB:       0,
-	}); err != nil {
+	}
+
+	if config["REDIS_TLS"] == "enabled" {
+		redisOptions.TLSConfig = &tls.Config{}
+	}
+
+	if subscriber, err = infrastructure.NewRedisSubscriber(redisOptions); err != nil {
 		logger.Fatal(fmt.Sprintf("could not initialize publisher: %s", err.Error()), 1)
 	}
 

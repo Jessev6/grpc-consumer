@@ -18,6 +18,7 @@ func (cl *AppConfigLoader) LoadFromEnv() map[string]string {
 		"PORT":           "3000",
 		"REDIS_ADDR":     "localhost:6379",
 		"REDIS_PASSWORD": "",
+		"REDIS_TLS":      "disabled",
 		"LOG_LEVEL":      "3",
 	}
 
