@@ -86,7 +86,7 @@ func (r *RedisSubscriber) Subscribe(subscription abstract.ISubscription, message
 	} else {
 		for {
 			results, err := r.client.XRead(&redis.XReadArgs{
-				Streams: []string{subscription.Key(),  "$"},
+				Streams: []string{subscription.Key(), "$"},
 				Block:   0,
 			}).Result()
 

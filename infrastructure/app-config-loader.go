@@ -20,6 +20,9 @@ func (cl *AppConfigLoader) LoadFromEnv() map[string]string {
 		"REDIS_PASSWORD": "",
 		"REDIS_TLS":      "disabled",
 		"LOG_LEVEL":      "3",
+		"TLS":            "disabled",
+		"TLS_CERT_PATH":  "",
+		"TLS_KEY_PATH":   "",
 	}
 
 	for key, value := range config {
