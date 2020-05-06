@@ -11,6 +11,7 @@ import (
 	pb "github.com/verbruggenjesse/grpc-consumer/gen"
 	"github.com/verbruggenjesse/grpc-consumer/infrastructure"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
 )
 
@@ -58,6 +59,16 @@ func main() {
 		grpc.KeepaliveParams(keepalive.ServerParameters{
 			MaxConnectionIdle: 5 * time.Minute, // <--- This fixes it!
 		}),
+	}
+
+	if config["TLS"] == "enabled" {
+		creds, err := credentials.NewServerTLSFromFile(config["TLS_CERT_PATH"], config["TLS_KEY_PATH"])
+
+		if err != nil {
+			logger.Fatal(err.Error(), 1)
+		}
+
+		opts = append(opts, grpc.Creds(creds))
 	}
 
 	server := grpc.NewServer(opts...)
