@@ -60,3 +60,7 @@ For testing a small example client was put in place and can be found at: [TODO: 
 | PORT | The port to expose the application on | 3000 |
 | REDIS_ADDR | The address of the redis server to connect to | localhost:6379 |
 | REDIS_PASSWORD | The password to use to connect to redis |  |
+| REDIS_TLS | Can be configured to enable tls to secure connections to redis. This setting should be set to `enabled` to use tls | disabled |
+| TLS | Can be configured to enable tls to secure connections to this service. This setting should be set to `enabled` to use tls | disabled |
+| TLS_CERT_PATH | Path to certificate file |  |
+| TLS_KEY_PATH | Path to certificate key file |  |
