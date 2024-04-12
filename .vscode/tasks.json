@@ -4,7 +4,7 @@
     {
       "label": "Generate go protos",
       "type": "shell",
-      "command": "mkdir -p gen && cd protobuf && protoc --go_out=plugins=grpc:${workspaceFolder}/gen *.proto"
+      "command": "protoc --go_out=. --go-grpc_out=. protobuf/*.proto"
     },
     {
       "label": "Docker build",

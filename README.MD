@@ -26,10 +26,10 @@ Run task: "Generate go protos"
 
 Run commands from project root:
 ```
-mkdir -p gen 
-cd protobuf
-protoc --go_out=plugins=grpc:../gen *.proto
-cd ..
+protoc \
+  --go_out=. \
+  --go-grpc_out=. \
+  protobuf/*.proto
 ```
 
 #### Debugging

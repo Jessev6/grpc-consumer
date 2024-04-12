@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-redis/redis/v7"
-	pb "github.com/verbruggenjesse/grpc-consumer/gen"
+	"github.com/go-redis/redis/v8"
 	"github.com/verbruggenjesse/grpc-consumer/infrastructure"
+	"github.com/verbruggenjesse/grpc-consumer/protos/eventstore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
@@ -75,7 +75,7 @@ func main() {
 
 	consumer := infrastructure.NewEventConsumerServer(subscriber, logger)
 
-	pb.RegisterConsumerServer(server, consumer)
+	eventstore.RegisterConsumerServer(server, consumer)
 
 	logger.Info(fmt.Sprintf("grpc-consumer started, listening for incoming subscriptions at %s", lis.Addr().String()))
 	if err := server.Serve(lis); err != nil {

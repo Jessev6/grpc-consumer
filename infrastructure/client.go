@@ -2,13 +2,13 @@ package infrastructure
 
 import (
 	"github.com/verbruggenjesse/grpc-consumer/domain/abstract"
-	pb "github.com/verbruggenjesse/grpc-consumer/gen"
+	"github.com/verbruggenjesse/grpc-consumer/protos/eventstore"
 )
 
 // EventClient is a client that can handle miultiple streams of events
 type EventClient struct {
 	subscriber abstract.ISubscriber
-	eventChan  chan *pb.Event
+	eventChan  chan *eventstore.Event
 	errChan    chan error
 }
 
@@ -16,8 +16,8 @@ type EventClient struct {
 func NewEventClient(subscriber abstract.ISubscriber) *EventClient {
 	return &EventClient{
 		subscriber: subscriber,
-		eventChan:  make(chan *pb.Event, 0),
-		errChan:    make(chan error, 0),
+		eventChan:  make(chan *eventstore.Event),
+		errChan:    make(chan error),
 	}
 }
 
@@ -27,7 +27,7 @@ func (e *EventClient) Subscribe(subscription abstract.ISubscription) {
 
 	go func() {
 		for message := range messageChan {
-			event := &pb.Event{
+			event := &eventstore.Event{
 				Key:     message.Key(),
 				Id:      message.ID(),
 				Payload: []byte(message.Values()["payload"].(string)),
@@ -45,7 +45,7 @@ func (e *EventClient) Subscribe(subscription abstract.ISubscription) {
 }
 
 // EventChan is used to transport events
-func (e *EventClient) EventChan() *chan *pb.Event {
+func (e *EventClient) EventChan() *chan *eventstore.Event {
 	return &e.eventChan
 }
 

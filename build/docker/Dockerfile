@@ -3,7 +3,7 @@ FROM alpine:latest as certs
 RUN apk --update add ca-certificates
 
 # 1. build executable
-FROM golang:1.13-alpine as builder
+FROM golang:1.22-alpine as builder
 
 # 2. Add user for non root access
 RUN addgroup -g 2000 appuser && \
@@ -12,13 +12,16 @@ RUN addgroup -g 2000 appuser && \
 # 2. install build dependencies
 RUN apk add git
 RUN apk add protoc
-RUN go get github.com/golang/protobuf/protoc-gen-go
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 
 # 3. generate proto files
 WORKDIR /go/src/app
-COPY protobuf/*.proto .
-RUN mkdir gen
-RUN protoc --go_out=plugins=grpc:./gen *.proto
+COPY protobuf/*.proto protobuf/
+RUN protoc \
+  --go_out=. \
+  --go-grpc_out=. \
+  protobuf/*.proto
 
 # 4. install dependencies
 COPY go.mod .

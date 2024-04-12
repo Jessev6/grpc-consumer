@@ -1,6 +1,8 @@
 syntax = "proto3"; 
 package eventstore;
 
+option go_package = "protos/eventstore";
+
 message Event { 
     string key = 1; 
     string id = 2;

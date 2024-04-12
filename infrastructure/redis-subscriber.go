@@ -1,10 +1,11 @@
 package infrastructure
 
 import (
+	"context"
 	"errors"
 	"log"
 
-	"github.com/go-redis/redis/v7"
+	"github.com/go-redis/redis/v8"
 	"github.com/verbruggenjesse/grpc-consumer/domain"
 	"github.com/verbruggenjesse/grpc-consumer/domain/abstract"
 )
@@ -28,14 +29,14 @@ func NewRedisSubscriber(opts *redis.Options) (*RedisSubscriber, error) {
 }
 
 func testClient(c *redis.Client) error {
-	_, err := c.Ping().Result()
+	_, err := c.Ping(context.Background()).Result()
 
 	return err
 }
 
 func (r *RedisSubscriber) isInitialized() (bool, error) {
 	if r.client == nil {
-		return false, errors.New("Redis client was not initialized")
+		return false, errors.New("redis client was not initialized")
 	}
 	return true, nil
 }
@@ -65,13 +66,13 @@ func (r *RedisSubscriber) Subscribe(subscription abstract.ISubscription, message
 
 	if closedLength {
 		if !eventSubscription.Reversed() {
-			messages, err = r.client.XRangeN(subscription.Key(), subscription.From(), subscription.To(), int64(subscription.Count())).Result()
+			messages, err = r.client.XRangeN(context.Background(), subscription.Key(), subscription.From(), subscription.To(), int64(subscription.Count())).Result()
 
 			if err != nil {
 				*errChan <- err
 			}
 		} else {
-			messages, err = r.client.XRevRangeN(subscription.Key(), subscription.From(), subscription.To(), int64(subscription.Count())).Result()
+			messages, err = r.client.XRevRangeN(context.Background(), subscription.Key(), subscription.From(), subscription.To(), int64(subscription.Count())).Result()
 
 			if err != nil {
 				*errChan <- err
@@ -85,7 +86,7 @@ func (r *RedisSubscriber) Subscribe(subscription abstract.ISubscription, message
 
 	} else {
 		for {
-			results, err := r.client.XRead(&redis.XReadArgs{
+			results, err := r.client.XRead(context.Background(), &redis.XReadArgs{
 				Streams: []string{subscription.Key(), "$"},
 				Block:   0,
 			}).Result()
